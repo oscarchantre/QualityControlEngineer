@@ -8,6 +8,7 @@ from pages.product_page import ProductPage
 from pages.cart_page import CartPage
 from pages.checkout_page import CheckoutPage
 import os
+import uuid
 
 @pytest.fixture(scope="session")
 def browser_type_launch_args(browser_type_launch_args):
@@ -29,7 +30,12 @@ def browser_context_args(browser_context_args):
 
 
 # Parametrización del correo
-@pytest.mark.parametrize("email", ["Juancarlos060@yopmail.com"])
+def generate_email():
+    unique_id = uuid.uuid4().hex[:6]  # 6 caracteres aleatorios
+    return f"juancarlos{unique_id}@yopmail.com"
+@pytest.mark.parametrize("email", [generate_email()])
+
+
 def test_opencart(page: Page, email):
     home = HomePage(page)
     register = RegisterPage(page)
@@ -60,8 +66,6 @@ def test_opencart(page: Page, email):
         "Carrera Siempre viva 12 # 13 - 80", "cali",
         "70001", "47", "750"
     )
-    # checkout.confirm_order()
-
     # Guardar el video al terminar
     video = page.video
     page.close()
